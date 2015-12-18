@@ -21,6 +21,7 @@ The keepInactiveCount variable determines how many of months after their last ac
 fullStats = sys.argv[1]
 outputFile = sys.argv[2]
 clusterType = 'kMedCluster'
+inactive_cluster = 'IA'
 # Identify whether to remove the last inactive months, and how many to keep
 removeInactive = True
 keepInactiveCount = 0
@@ -54,8 +55,14 @@ with open(fullStats, 'rb') as f:
         userID = statrow['user_id']
         edits = int(statrow['all_edits'])
         if userID == currUser:
-            currClusters.append(statrow[clusterType])
-            isActive.append(edits > 0)
+            if edits > 0:
+                isActive.append(True)
+                currClusters.append(statrow[clusterType])
+            else:
+                # This is a silly place to put it, but this marks
+                # months in which users weren't active at all
+                isActive.append(False)
+                currClusters.append(inactive_cluster)
         else:
             # If it's a new user ID, then append the old one to the results, and reset
             if currClusters:

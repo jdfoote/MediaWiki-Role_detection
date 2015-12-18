@@ -16,7 +16,7 @@ have a stat for (1,1) -> 3, but if numPrevious = 1, then it would have a stat fo
 
 It prints a Latex code that can be inserted in the tabular environment. Changing the final line changes the format'''
 
-roleDict = {'0': 'Low Activity', '1':'Central Member', '2':'Peripheral Expert', '3':'Newbie', 'NA': 'Leaving'}
+roleDict = {'0': 'Low Activity', '1':'Central Member', '2':'Peripheral Expert', '3':'Newbie', 'NA': 'Leaving', 'IA': 'Inactive'}
 numPrevious = 1
 inputFile = sys.argv[1]
 with open(inputFile, 'rb') as f:

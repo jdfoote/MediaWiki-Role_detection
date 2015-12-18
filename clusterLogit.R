@@ -9,6 +9,7 @@ dSmall[dSmall == '0'] <- 'LowActivity'
 dSmall[dSmall == '1'] <- 'CentralMember'
 dSmall[dSmall == '2'] <- 'PeripheralExpert'
 dSmall[dSmall == '3'] <- 'Newbie'
+dSmall[dSmall == 'IA'] <- 'Inactive'
 dSmall$T1 <- factor(dSmall$T1, ordered=FALSE, levels=c("LowActivity","CentralMember","Newbie","PeripheralExpert"))
 dSmall$T2 <- factor(dSmall$T2, ordered=FALSE, levels=c("LowActivity","CentralMember","Newbie","PeripheralExpert"))
 dSmall$T3 <- factor(dSmall$T3, ordered=FALSE, levels=c("LowActivity","CentralMember","Newbie","PeripheralExpert"))
