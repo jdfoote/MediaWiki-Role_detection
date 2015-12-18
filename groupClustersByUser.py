@@ -26,6 +26,7 @@ removeInactive = True
 keepInactiveCount = 0
 # For the stats, this identifies the month that a user quit with "NA"
 NAForLastMonth = True
+inactive_cluster = 'IA'
 
 def filterUser(clusterList, isActive):
     # If the user was active in the last month, then they haven't quit, and inactive
@@ -54,7 +55,10 @@ with open(fullStats, 'rb') as f:
         userID = statrow['user_id']
         edits = int(statrow['all_edits'])
         if userID == currUser:
-            currClusters.append(statrow[clusterType])
+            if edits > 0:
+                currClusters.append(statrow[clusterType])
+            else:
+                currClusters.append(inactive_cluster)
             isActive.append(edits > 0)
         else:
             # If it's a new user ID, then append the old one to the results, and reset
