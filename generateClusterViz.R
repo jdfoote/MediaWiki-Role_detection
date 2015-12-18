@@ -5,7 +5,7 @@ library(ggplot2)
 #clusters.agg <- aggregate(. ~ id + variable, clusters.mlt, sum)
 
 # The location of the clusters by id file
-suffix = '0TrailingWithNAReversed'
+suffix = 'WithIA'
 
 # Number of months to include
 monthsToInclude = 10
@@ -21,22 +21,27 @@ xLabs <- as.character(xVals*30)
 minMonths = 2
 
 #Import the data and add names of clusters
-clusterDF <- as.data.frame(read.csv(paste('clustersByID',suffix,'.csv',sep='')))
+clusterDF <- as.data.frame(read.csv(paste('clustersByID',suffix,'.csv',sep=''), stringsAsFactors=FALSE))
 
-# Remove users who are active less than monthsActiveMin
-clusterDF <- clusterDF[complete.cases(clusterDF[,1:monthsActiveMin]),]
 
 numCols <- length(clusterDF)
 clusterDF[2:numCols][clusterDF[2:numCols]==0] <- 'Low Activity'
 clusterDF[2:numCols][clusterDF[2:numCols]==1] <- 'Core Members'
 clusterDF[2:numCols][clusterDF[2:numCols]==2] <- 'Peripheral Experts'
 clusterDF[2:numCols][clusterDF[2:numCols]==3] <- 'Newbies'
+clusterDF[2:numCols][clusterDF[2:numCols]==''] <- NA
+clusterDF[2:numCols][clusterDF[2:numCols]=='NA'] <- NA
+
+# Remove users who are active less than monthsActiveMin
+clusterDF <- clusterDF[complete.cases(clusterDF[,1:monthsActiveMin]),]
 
 makeGraph <- function(clusters, graphType="fill", numMonths=monthsToInclude){
-		clusters = clusters[,0:numMonths+1]
+		clusters <- clusters[,0:numMonths+1]
 		ylabel <- if(graphType == 'fill') "Proportion of users in each role" else "Number of users in each role"
 		mm <- melt(clusters, id.vars="id", variable.name="Time", value.name="Role")
 		plotData <- as.data.frame(with(mm, table(Role, Time)))
+        plotData <- plotData[plotData$Role != 'IA',]
+        plotData <- plotData[complete.cases(plotData),]
 		plotData$Role <- factor(plotData$Role, c("Core Members","Peripheral Experts","Newbies","Low Activity"))
 		p <- (ggplot(plotData) +
 		  geom_area(aes(x=Time, y=Freq, fill=Role, group=Role, order=Role), position=graphType))
