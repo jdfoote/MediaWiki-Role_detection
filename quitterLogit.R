@@ -4,10 +4,12 @@ library(stargazer)
 focusMonth = as.Date('2012-07-03')
 d <- as.data.frame(read.csv("~/Programming/WeRelate/DataFiles/allUserStatsRatios0Trailing.csv"))
 dSmall <- d[c(1,3,41,44,45)]
+dSmall <- d[c('user_id','end_date','dayssincefirstedit','kMedCluster','manual_edits')]
 dSmall$kMedCluster[dSmall$kMedCluster == '0'] <- 'LowActivity'
 dSmall$kMedCluster[dSmall$kMedCluster == '1'] <- 'CentralMember'
 dSmall$kMedCluster[dSmall$kMedCluster == '2'] <- 'PeripheralExpert'
 dSmall$kMedCluster[dSmall$kMedCluster == '3'] <- 'Newbie'
+dSmall$kMedCluster[dSmall$manual_edits == 0] <- 'Inactive'
 dSmall$end_date <- as.Date(dSmall$end_date)
 # Note - this gets the 3 months before the focus month, plus the focus month
 dSmaller <- subset(dSmall, end_date > focusMonth - 95 & end_date < focusMonth + 1)
